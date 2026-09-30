@@ -23,6 +23,19 @@ export const templateConfig: TemplateConfig = {
     lineHeight: 1.2,
     maxLines: 2,
   },
+  eventText: {
+    x: 500,
+    y: 200,
+    maxWidth: 600,
+    fontSize: 42,
+    fontFamily: 'Inter, system-ui, sans-serif',
+    fontWeight: 600,
+    color: '#FFFFFF',
+    alignment: 'left',
+    lineHeight: 1.3,
+    maxLines: 2,
+    text: 'I am attending AWS MECS event',
+  },
   backgroundColor: '#232F3E',
 };
 

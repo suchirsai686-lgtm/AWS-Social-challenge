@@ -194,6 +194,76 @@ export async function composePoster(
     });
   }
 
+  if (config.eventText) {
+    const eventConfig = config.eventText;
+    const eventText = eventConfig.text;
+    
+    ctx.font = `${eventConfig.fontWeight} ${eventConfig.fontSize}px ${eventConfig.fontFamily}`;
+    ctx.fillStyle = eventConfig.color;
+    ctx.textAlign = eventConfig.alignment;
+    ctx.textBaseline = 'top';
+
+    let fontSize = eventConfig.fontSize;
+    let lines: string[] = [eventText];
+    
+    const measureText = (text: string, size: number) => {
+      ctx.font = `${eventConfig.fontWeight} ${size}px ${eventConfig.fontFamily}`;
+      return ctx.measureText(text).width;
+    };
+
+    while (true) {
+      const maxLineWidth = Math.max(...lines.map(l => measureText(l, fontSize)));
+      if (maxLineWidth <= eventConfig.maxWidth || fontSize <= 16) break;
+      fontSize -= 2;
+    }
+
+    if (measureText(eventText, fontSize) > eventConfig.maxWidth && eventConfig.maxLines && eventConfig.maxLines > 1) {
+      const words = eventText.split(' ');
+      lines = [];
+      let currentLine = '';
+      
+      for (const word of words) {
+        const testLine = currentLine ? `${currentLine} ${word}` : word;
+        if (measureText(testLine, fontSize) <= eventConfig.maxWidth) {
+          currentLine = testLine;
+        } else {
+          if (currentLine) lines.push(currentLine);
+          currentLine = word;
+        }
+      }
+      if (currentLine) lines.push(currentLine);
+      
+      if (lines.length > (eventConfig.maxLines || 2)) {
+        lines = lines.slice(0, eventConfig.maxLines);
+        const lastLine = lines[lines.length - 1];
+        if (measureText(lastLine + '...', fontSize) <= eventConfig.maxWidth) {
+          lines[lines.length - 1] = lastLine + '...';
+        }
+      }
+    }
+
+    ctx.font = `${eventConfig.fontWeight} ${fontSize}px ${eventConfig.fontFamily}`;
+    const lineHeight = (eventConfig.lineHeight || 1.2) * fontSize;
+
+    let startY = eventConfig.y;
+    if (eventConfig.alignment === 'center') {
+      startY = eventConfig.y - ((lines.length - 1) * lineHeight) / 2;
+    }
+
+    lines.forEach((line, index) => {
+      const y = startY + index * lineHeight;
+      let x = eventConfig.x;
+      
+      if (eventConfig.alignment === 'center') {
+        x = eventConfig.x + eventConfig.maxWidth / 2;
+      } else if (eventConfig.alignment === 'right') {
+        x = eventConfig.x + eventConfig.maxWidth;
+      }
+
+      ctx.fillText(line, x, y);
+    });
+  }
+
   const blob = await new Promise<Blob>((resolve) => {
     canvas.toBlob((b) => resolve(b!), 'image/png', 1.0);
   });

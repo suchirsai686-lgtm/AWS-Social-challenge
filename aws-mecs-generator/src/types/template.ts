@@ -20,11 +20,26 @@ export interface NameConfig {
   maxLines?: number;
 }
 
+export interface EventTextConfig {
+  x: number;
+  y: number;
+  maxWidth: number;
+  fontSize: number;
+  fontFamily: string;
+  fontWeight: number;
+  color: string;
+  alignment: 'left' | 'center' | 'right';
+  lineHeight?: number;
+  maxLines?: number;
+  text: string;
+}
+
 export interface TemplateConfig {
   width: number;
   height: number;
   photo: PhotoConfig;
   name: NameConfig;
+  eventText?: EventTextConfig;
   backgroundColor?: string;
 }
 
