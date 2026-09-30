@@ -5,7 +5,7 @@ export const templateConfig: TemplateConfig = {
   height: 630,
   photo: {
     x: 600,
-    y: 100,
+    y: 120,
     width: 280,
     height: 280,
     shape: 'circle',
@@ -13,7 +13,7 @@ export const templateConfig: TemplateConfig = {
   },
   name: {
     x: 650,
-    y: 420,
+    y: 440,
     maxWidth: 500,
     fontSize: 48,
     fontFamily: 'Inter, system-ui, sans-serif',
